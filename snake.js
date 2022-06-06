@@ -5,7 +5,7 @@ const TILESEPERATION = 0
 var p1X = 180
 var p1Y = 240
 var pDir = 0
-var pS = 4
+var pS = 1
 
 var updates = 0
 
@@ -13,12 +13,12 @@ var updates = 0
 
 var position_log = [[240, 180]]
 
-var orb_log = []
+var orb_log = [[404, 404]]
 
-for (var i = 0; i < pS; i++) {
-    console.log("setup")
-    logpos(i * TILESIZE);
-};
+//for (var i = 0; i < pS; i++) {
+  //  console.log("setup")
+    //logpos(i * TILESIZE);
+//};
 
 //Canvas Setup
 var box = jQuery('.box');	// reference to the HTML .box element
@@ -66,28 +66,38 @@ function myKeyPress(e) {
 };
 
 
+//setup
+
+createorb()
+pS = 1
+
+//setup
+
 function stamp() {
 
-    
+    rect(460, 180, 5, 175, "Azure") //wall
 
 
-    for (var i = 0; i <= pS; i++) { // render snake limbs. Z:-1
+
+    try {
+        for (var i = 0; i <= pS; i++) { // render snake limbs. Z:-1
 
 
-        rect((roundToTileset(position_log[i][0]) ?? 404) - (TILESIZE / 2), (roundToTileset(position_log[i][1]) ?? 404) - (TILESIZE / 2), TILESIZE, TILESIZE, "Red")
-
-    };
-
-    rect(roundToTileset(p1X) - (TILESIZE / 2), roundToTileset(p1Y) - (TILESIZE / 2), TILESIZE, TILESIZE, "Blue") // render snake head. Z:0
-
-    if (orb_log.length > 0) { // render food(?) orbs. Z:1
-        for (var i = 0; i <= orb_log.length; i++) {
-
-            elipses((orb_log[i][0] ?? 404), (orb_log[i][1] ?? 404), 1, "Green");
+            rect((roundToTileset(position_log[i][0]) ?? 404) - (TILESIZE / 2), (roundToTileset(position_log[i][1]) ?? 404) - (TILESIZE / 2), TILESIZE, TILESIZE, "Red")
 
         };
-    }
+    } catch (err) { } // these exist to temporarily fix the array[i][0] error. seemingly the error is more of a warning, as the array call works when the error is caught
 
+    rect(roundToTileset(p1X) - (TILESIZE / 2), roundToTileset(p1Y) - (TILESIZE / 2), TILESIZE, TILESIZE, "Blue") // render snake head. Z:0
+    try {
+        if (orb_log.length > 0) { // render food(?) orbs. Z:1
+            for (var i = 0; i <= orb_log.length; i++) {
+
+                elipses((orb_log[i][0] ?? 404), (orb_log[i][1] ?? 404), 1, "Green")
+
+            };
+        }
+    } catch (err) { }
 };
 
 
@@ -149,7 +159,8 @@ var lastUpdate = Date.now(); //deltatime handler
 var now = Date.now();
 var dt = now - lastUpdate;
 setInterval(process, dt)
-setInterval(update, 375)
+//setInterval(spawnItem, 1200)
+setInterval(update, 300 - (1 * Math.abs(updates)))
 
 function update() {
 
@@ -186,7 +197,7 @@ function checkcoll() {
             if (roundToTileset(p1X) === (orb_log[i][0] ?? 404) && roundToTileset(p1Y) === (orb_log[i][1] ?? 404)) {
 
                 pS += 1
-                orbQueueFree()
+                orbQueueFree(i)
                 console.log("pickup!")
 
 
@@ -211,14 +222,14 @@ function playerprocess() {
 }
 
 function process() {
-   try {
+    try {
         clear()
         getpress()
         playerprocess()
         stamp()
     }
     catch (err) {
-        document.getElementById("dt").innerHTML = err.toString() + " at: " // + err.lineNumber
+        document.getElementById("dt").innerHTML = err.toString() + " at: " + err.lineNumber
     };
 };
 
@@ -237,16 +248,23 @@ function loss() {
 };
 
 function createorb() {
-    var orbx = roundToTileset(randi(200, -200))
-    var orby = roundToTileset(randi(200, -200)) //hehe orby 
+    var orbx = roundToTileset(randi(0, 480))
+    var orby = roundToTileset(randi(0, 360)) //hehe orby 
     var orbpos = [orbx, orby]
     orb_log.push(orbpos)
 };
 
-function orbQueueFree() {
-    delete orb_log[orb_log.indexOf([p1X, p1Y])]
+function orbQueueFree(orb) {
+    orb_log.splice(orb, 1)
+    console.log("ouch" + orb_log[orb])
+
+    createorb()
 }
 
 function debug() {
+    createorb()
+}
+
+function spawnItem() {
     createorb()
 }
