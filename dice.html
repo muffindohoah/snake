@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,11 +17,21 @@
     <p></p>
     <input type="text" id="rollCount" name="rollCount"><br><p style="color:azure">How many rolls?</p><br></input>
     <input type="text" id="sidedDie" name="sidedDie"><br><p style="color:azure">How many sides to the die?</p><br></input>
-    <div id="log"><p style="color:azure">Roll Log:</p></div>
+    
+    <p style="color:azure">Roll Log:</p>
+    <div id="log"></div>
 </body>
 
 
 <style>
+
+    #rollCount {
+        val: 1;
+    }
+
+    #sidedDie {
+        val: 6;
+    }
     
     #log {
 
@@ -28,7 +39,7 @@
         width: 300px;
         background-color: rgb(64, 31, 47);
         
-        position: sticky;
+        position: relative;
     }
 
 

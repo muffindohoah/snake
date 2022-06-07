@@ -1,4 +1,7 @@
 
+var i = 0
+var rollcount = $("#rollCount").val()
+
 console.log($)
 var button = $("rollSubmit")
 
@@ -30,31 +33,45 @@ $("#rollSubmit").on("click", rollProcess);
 
 function rollProcess() {
     console.log($("#rollCount").val())
-    var rollcount = $("rollCount").val()
+    rollcount = $("#rollCount").val()
+    
 
-    logRoll("123")
-    for (var i = 0; i < rollcount; i++) {
+    logRoll("==============")
+    //for (var i = 0; i < rollcount; i++) {
 
-        roll()
+    roll()
 
 
-    };
 
-    logRoll("456")
+
+    //};
+
+    
+    i = 0
 
 };
 
 function roll() {
+    
 
     try {
         console.log("rolling")
-        var sidedDie = Int($("sidedDie").text)
-        var rollNumber = randi(0, sidedDie)
+        var sidedDie = $("#sidedDie").val()
+        var result = randi(0, sidedDie)
 
         clear()
-        Dot()
-        //logRoll()
-        setTimeout(roll, 500)
+        Dot(result)
+        logRoll(result)
+
+        i++
+        if (i < rollcount) {
+            setTimeout(roll, 500)
+        } else {
+            logRoll("==============")
+            i = 0
+        }
+
+        return result
 
     } catch (err) {
         alert(err.message);
@@ -68,8 +85,15 @@ function getRoll() {
 
 function logRoll(roll) {
     console.log("texti")
-   
-    $("#p").add(String(roll)).appendTo("#log");
+
+    $("#log")
+        .css("color", "Azure")
+        .append("<p> " + roll + " </p>")
+
+
+    //$("p").add(String(roll))
+    //.css("color", "Azure")
+    //.appendTo("#log");
 };
 
 
